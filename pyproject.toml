@@ -10,3 +10,10 @@ dependencies = [
     "pillow>=13.0.0",
     "psycopg[binary]>=3.3.7",
 ]
+
+[dependency-groups]
+dev = [
+    "factory-boy>=3.3.3",
+    "faker>=40.44.0",
+    "tqdm>=4.70.1",
+]
