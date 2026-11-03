@@ -1,6 +1,19 @@
+import uuid
+
 from django.conf import settings
 from django.db import models
 from django.utils.text import slugify
+from pathlib import Path
+
+
+def restaurant_image_path(instance, filename):
+    ext = Path(filename).suffix.lower()
+    return f"restaurants/{instance.slug or 'new'}/{uuid.uuid4().hex}{ext}"
+
+
+def menu_item_image_path(instance, filename):
+    ext = Path(filename).suffix.lower()
+    return f"menu_items/{uuid.uuid4().hex}{ext}"
 
 
 class Cuisine(models.Model):
@@ -33,6 +46,9 @@ class Restaurant(models.Model):
     address = models.CharField(max_length=255)
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
+
+    logo = models.ImageField(upload_to=restaurant_image_path, blank=True)
+    cover_image = models.ImageField(upload_to=restaurant_image_path, blank=True)
     phone = models.CharField(max_length=20, blank=True)
 
     delivery_fee = models.DecimalField(max_digits=6, decimal_places=2, default=0)
@@ -107,6 +123,7 @@ class MenuItem(models.Model):
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     is_available = models.BooleanField(default=True)
+    image = models.ImageField(upload_to=menu_item_image_path, blank=True)
 
     class Meta:
         ordering = ["name"]
